@@ -1,10 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../userContext/UserContext';
+import toast from 'react-hot-toast';
+
 
 const REgistration = () => {
     const [success ,setSuccess] =useState(false)
-    const {createUser} = useContext(AuthContext)
+    const {createUser ,updateUser ,verifyEmail} = useContext(AuthContext)
     const navigate = useNavigate()
 
     const handleRegisterbtn = (event) =>{
@@ -12,15 +14,19 @@ const REgistration = () => {
 
         const form = event.target;
         const name = form.name.value;
+        const photoURL =form.photoURL.value;
         const email = form.email.value;
         const password = form.password.value;
 
-        console.log( name ,email , password)
+        // console.log( name ,email , password ,photoURL)
 
         createUser(email ,password).then(result => {
             const user = result.user;
             setSuccess(true)
             navigate('/login')
+            handleUpdateUser(name ,photoURL)
+            toast.success("Verify your email address.")
+            emailverification()
             console.log(user)
         })
         .catch((error) => {
@@ -28,6 +34,24 @@ const REgistration = () => {
             console.error( error.message)
             // ..
           });
+
+          const handleUpdateUser =(name , photoURL) =>{
+            const profile ={
+              displayName : name , 
+              photoURL : photoURL
+            }
+            
+            updateUser(profile).then(() => {})
+            .catch(error =>{
+              console.error(error)
+            })
+          }
+          const emailverification =()=>{
+            verifyEmail().then(()=>{
+              // Email verification send
+            })
+          }
+          
 
 
     }
@@ -46,6 +70,12 @@ const REgistration = () => {
                   <span className="label-text">Name</span>
                 </label>
                 <input type="text" name='name' placeholder="Your Name" className="input input-bordered" required />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Photo URL</span>
+                </label>
+                <input type="text" name='photoURL' placeholder="your profile picture link" className="input input-bordered" required />
               </div>
               <div className="form-control">
                 <label className="label">

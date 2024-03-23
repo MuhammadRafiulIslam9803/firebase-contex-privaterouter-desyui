@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../userContext/UserContext';
+import { FaUser } from "react-icons/fa6";
 
 const Header = () => {
     const {user , logOut} = useContext(AuthContext)
@@ -21,10 +22,21 @@ const Header = () => {
                 </div>
                 <div>
                 {
-                    user?.email ?  
-                    <div>
-                        <p>Welcome {user.email} <small onClick={handleLogOut}><Link className="btn btn-ghost text-xl" to='/logout'>Logout</Link></small></p>
-                        
+                    user?.uid ?  
+                    <div className='flex justify-between align-middle'>
+                        <div>
+                        <p>Welcome {user.displayName} <small onClick={handleLogOut}
+                        ><Link className="btn btn-ghost text-xl" to='/logout'>Logout</Link>
+                        </small></p>
+                        </div>
+                        <div>
+                        {
+                            user?.photoURL ?
+                            <Link to="userDetails"><img className=" h-14 w-12 rounded" src={user.photoURL}  alt="" /></Link>
+                            : 
+                            <FaUser/>
+                        }
+                        </div>
                     </div>
                     :
                      <div>
@@ -34,6 +46,8 @@ const Header = () => {
                  }
                 
                 </div>
+            </div>
+            <div>
             </div>
         </div>
     );
